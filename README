@@ -10,6 +10,8 @@ SYNOPSIS
           after_event_dispatch   => \&do_something,
           before_session_create  => \&do_something,
           after_session_create   => \&do_something,
+          before_event_enqueue   => \&do_something,
+          after_event_enqueue    => \&do_something,
       );
 
       # ... carry on with life as normal ...
@@ -17,20 +19,27 @@ SYNOPSIS
 DISCUSSION
     This module adds lightweight hooks into the inner workings of POE.
     Currently, one can add hooks into POE that get called before/after an
-    event is dispatched and/or before/after a Session is created. These
-    callbacks receive the exact same argument list as their Kernel/Session
-    counterpart. For event dispatch related callbacks, see "_dispatch_event"
+    event is dispatched, before/after a Session is created, and/or
+    before/after an event is enqueued. These callbacks receive the exact
+    same argument list as their Kernel/Session counterpart. For event
+    dispatch related callbacks, see "_dispatch_event" and "_data_ev_enqueue"
     in POE::Kernel. For session related callbacks, see "create" in
     POE::Session.
+
+BUGS
+    When $_[KERNEL]->call($_[SESSION], "event") is used, _event_dispatch is
+    bypassed. This is an optimization, not a bug, but it will cause the
+    event_dispatch hook to be bypassed under this condition. Someone relying
+    on the event_dispatch hook may call this a bug.
 
 AUTHOR
     Matt Cashner (sungo@pobox.com)
 
 DATE
-    $Date: 2004-10-08 19:30:15 -0400 (Fri, 08 Oct 2004) $
+    $Date: 2004-12-12 14:48:04 -0500 (Sun, 12 Dec 2004) $
 
 REVISION
-    $Rev: 404 $
+    $Rev: 443 $
 
 LICENSE
     Copyright (c) 2004, Matt Cashner. All rights reserved.

@@ -1,15 +1,22 @@
-# $Id: Hooks.pm 404 2004-10-08 23:30:15Z sungo $
+# $Id: Hooks.pm 443 2004-12-12 19:48:04Z sungo $
 package POE::API::Hooks;
 # pod at bottom
 
 BEGIN {
 	use POE;
-	use vars qw($orig_dispatch_event $orig_session_create);
+	use vars qw(
+			$orig_dispatch_event 
+			$orig_session_create
+			$orig_data_ev_enqueue 
+			);
 
-	$orig_dispatch_event = \&POE::Kernel::_dispatch_event;
-	$orig_session_create = \&POE::Session::create;
+	$orig_dispatch_event  = \&POE::Kernel::_dispatch_event;
+	$orig_session_create  = \&POE::Session::create;
+	$orig_data_ev_enqueue = \&POE::Kernel::_data_ev_enqueue;
+
 	*{'POE::Kernel::_dispatch_event'} = \&ima_bad_monkey_dispatch_event;
 	*{'POE::Session::create'} = \&ima_bad_monkey_session_create;
+	*{'POE::Kernel::_data_ev_enqueue'} = \&ima_bad_monkey_data_ev_enqueue;
 }
 
 use warnings;
@@ -17,7 +24,7 @@ use strict;
 
 use Params::Validate qw(validate CODEREF);
 
-our $VERSION = '1.'.sprintf "%04d", (qw($Rev: 404 $))[1];
+our $VERSION = '1.'.sprintf "%04d", (qw($Rev: 443 $))[1];
 
 my %HOOKS = (
 	before_event_dispatch  => [],
@@ -25,6 +32,9 @@ my %HOOKS = (
 
 	before_session_create  => [],
 	after_session_create   => [],
+
+	before_event_enqueue   => [],
+	after_event_enqueue    => [],
 );
 
 sub add {
@@ -49,6 +59,16 @@ sub add {
 			type => CODEREF,
 			optional => 1,
 		},
+
+		before_event_enqueue => {
+			type => CODEREF,
+			optional => 1,
+		},
+
+		after_event_enqueue => {
+			type => CODEREF,
+			optional => 1,
+		},
 	});
 
 	my %args = @_;
@@ -64,6 +84,12 @@ sub add {
 	}
 	if($args{after_session_create}) {
 		push @{ $HOOKS{after_session_create} }, $args{after_session_create};
+	}
+	if($args{before_event_enqueue}) {
+		push @{ $HOOKS{before_event_enqueue} }, $args{before_event_enqueue};
+	}
+	if($args{after_event_enqueue}) {
+		push @{ $HOOKS{after_event_enqueue} }, $args{after_event_enqueue};
 	}
 
 	return;
@@ -107,7 +133,27 @@ sub ima_bad_monkey_session_create {
 	return $rc;
 }
 
+sub ima_bad_monkey_data_ev_enqueue {
+	my @args = @_;
+	if(@{ $HOOKS{before_event_enqueue} }) {
+		foreach my $sub (@{ $HOOKS{before_event_enqueue} }) {
+			eval { $sub->(@args); };
+		}
+	}
+
+	my $rc = $orig_data_ev_enqueue->(@args);
+
+	if(@{ $HOOKS{after_event_enqueue} }) {
+		foreach my $sub (@{ $HOOKS{after_event_enqueue} }) {
+			eval { $sub->(@args); };
+		}
+	}
+
+	return $rc;
+}
+
 1;
+
 __END__
 
 =pod
@@ -126,6 +172,8 @@ POE::API::Hooks - Implement lightweight hooks into POE
       after_event_dispatch   => \&do_something,
       before_session_create  => \&do_something,
       after_session_create   => \&do_something,
+      before_event_enqueue   => \&do_something,
+      after_event_enqueue    => \&do_something,
   );
 
   # ... carry on with life as normal ...
@@ -134,11 +182,19 @@ POE::API::Hooks - Implement lightweight hooks into POE
 
 This module adds lightweight hooks into the inner workings of POE.
 Currently, one can add hooks into POE that get called before/after an
-event is dispatched and/or before/after a Session is created. These
-callbacks receive the exact same argument list as their Kernel/Session
-counterpart. For event dispatch related callbacks, see
-C<_dispatch_event> in L<POE::Kernel>. For session related callbacks, see
-C<create> in L<POE::Session>.
+event is dispatched, before/after a Session is created, and/or
+before/after an event is enqueued.  These callbacks receive the exact
+same argument list as their Kernel/Session counterpart. For event
+dispatch related callbacks, see C<_dispatch_event> and
+C<_data_ev_enqueue> in L<POE::Kernel>.
+For session related callbacks, see C<create> in L<POE::Session>.
+
+=head1 BUGS
+
+When $_[KERNEL]->call($_[SESSION], "event") is used, _event_dispatch is
+bypassed.  This is an optimization, not a bug, but it will cause the
+event_dispatch hook to be bypassed under this condition.  Someone
+relying on the event_dispatch hook may call this a bug.
 
 =head1 AUTHOR
 
@@ -146,11 +202,11 @@ Matt Cashner (sungo@pobox.com)
 
 =head1 DATE
 
-$Date: 2004-10-08 19:30:15 -0400 (Fri, 08 Oct 2004) $
+$Date: 2004-12-12 14:48:04 -0500 (Sun, 12 Dec 2004) $
 
 =head1 REVISION
 
-$Rev: 404 $
+$Rev: 443 $
 
 =head1 LICENSE
 

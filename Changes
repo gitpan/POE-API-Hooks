@@ -86,3 +86,16 @@ Changed paths:
 
 meta file sync
 ------------------------------------------------------------------------
+r407 | sungo | 2004-10-08 20:34:46 -0400 (Fri, 08 Oct 2004) | 1 line
+Changed paths:
+   M /trunk/POE-API-Hooks/Changes
+
+update to reflect cpan release
+------------------------------------------------------------------------
+r443 | sungo | 2004-12-12 14:48:04 -0500 (Sun, 12 Dec 2004) | 1 line
+Changed paths:
+   M /trunk/POE-API-Hooks/lib/POE/API/Hooks.pm
+   M /trunk/POE-API-Hooks/t/02-add.t
+
+add in tag's patch to support _data_ev_enqueue hooks. add more documentation and testing than was provided in the patch
+------------------------------------------------------------------------
