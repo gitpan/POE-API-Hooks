@@ -10,3 +10,4 @@ t/00-compile.t
 t/01-spurious_warnings.t
 t/02-add.t
 t/03-no_add.t
+VERSION

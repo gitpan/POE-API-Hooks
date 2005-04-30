@@ -99,3 +99,27 @@ Changed paths:
 
 add in tag's patch to support _data_ev_enqueue hooks. add more documentation and testing than was provided in the patch
 ------------------------------------------------------------------------
+r444 | sungo | 2004-12-12 14:57:36 -0500 (Sun, 12 Dec 2004) | 1 line
+Changed paths:
+   M /trunk/POE-API-Hooks/Changes
+   M /trunk/POE-API-Hooks/META.yml
+   M /trunk/POE-API-Hooks/README
+
+automated files updated by dist process
+------------------------------------------------------------------------
+r476 | sungo | 2005-04-30 13:31:43 -0400 (Sat, 30 Apr 2005) | 1 line
+Changed paths:
+   M /trunk/POE-API-Hooks/Makefile.PL
+   A /trunk/POE-API-Hooks/VERSION
+   M /trunk/POE-API-Hooks/t/02-add.t
+
+fix test suite for poe 0.31 changes. add a version file
+------------------------------------------------------------------------
+r477 | sungo | 2005-04-30 13:33:21 -0400 (Sat, 30 Apr 2005) | 1 line
+Changed paths:
+   M /trunk/POE-API-Hooks/Changes
+   M /trunk/POE-API-Hooks/MANIFEST
+   M /trunk/POE-API-Hooks/META.yml
+
+meta file updates for release
+------------------------------------------------------------------------

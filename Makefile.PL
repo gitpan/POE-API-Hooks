@@ -1,10 +1,10 @@
-# $Id: Makefile.PL 402 2004-10-08 05:26:09Z sungo $
+# $Id: Makefile.PL 476 2005-04-30 17:31:43Z sungo $
 
 use ExtUtils::MakeMaker;
 WriteMakefile(
 	NAME => 'POE::API::Hooks',
 	AUTHOR => 'Matt Cashner (sungo@pobox.com)',
-	VERSION_FROM => 'lib/POE/API/Hooks.pm',
+	VERSION_FROM => 'VERSION',
 	PREREQ_PM => {
 		POE => '0',
 		Params::Validate => '0',
