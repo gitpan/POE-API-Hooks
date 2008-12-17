@@ -58,8 +58,13 @@ ok($before_dispatch,"before_event_dispatch firing check");
 ok($after_dispatch,"after_event_dispatch firing check");
 
 if($POE::VERSION >= 0.31) {
-	is($before_event_enqueue, 1, "before_event_enqueue firing check");
-	is($after_event_enqueue, 1, "after_event_enqueue firing check");
+	if($POE::VERSION >= 1.0) {
+		is($before_event_enqueue, 3, "before_event_enqueue firing check");
+		is($after_event_enqueue, 3, "after_event_enqueue firing check");
+	} else {
+		is($before_event_enqueue, 1, "before_event_enqueue firing check");
+		is($after_event_enqueue, 1, "after_event_enqueue firing check");
+	}
 } else {
 	is($before_event_enqueue, 3, "before_event_enqueue firing check");
 	is($after_event_enqueue, 3, "after_event_enqueue firing check");

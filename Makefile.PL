@@ -1,15 +1,17 @@
-# $Id: Makefile.PL 476 2005-04-30 17:31:43Z sungo $
+# $Id: Makefile.PL 618 2005-12-09 03:24:25Z sungo $
 
-use ExtUtils::MakeMaker;
-WriteMakefile(
-	NAME => 'POE::API::Hooks',
-	AUTHOR => 'Matt Cashner (sungo@pobox.com)',
-	VERSION_FROM => 'VERSION',
-	PREREQ_PM => {
-		POE => '0',
-		Params::Validate => '0',
-	},
-	dist => {
-		PREOP => 'svn log -r 1:HEAD -v > Changes; perldoc -t lib/POE/API/Hooks.pm > README',
-	},
-);
+use inc::Module::Install;
+
+name            ('POE-API-Hooks');
+author          ('Matt Cashner (sungo@pobox.com)');
+version_from    ('VERSION');
+license         ('bsd');
+
+requires        ('POE');
+requires        ('Params::Validate');
+requires        ('Test::More');
+
+build_requires  ('Test::Distribution');
+build_requires  ('Test::Pod::Coverage');
+
+WriteAll();
