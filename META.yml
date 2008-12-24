@@ -16,7 +16,7 @@ no_index:
     - inc
     - t
 requires:
-  POE: 0
+  POE: 1.0001
   Params::Validate: 0
   Test::More: 0
-version: 1.06
+version: 1.07

@@ -7,7 +7,7 @@ author          ('Matt Cashner (sungo@pobox.com)');
 version_from    ('VERSION');
 license         ('bsd');
 
-requires        ('POE');
+requires        ('POE'  => 1.0001);
 requires        ('Params::Validate');
 requires        ('Test::More');
 

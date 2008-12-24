@@ -68,7 +68,7 @@ use strict;
 
 use Params::Validate qw(validate CODEREF);
 
-our $VERSION = '2.01';
+our $VERSION = '2.02';
 
 my %HOOKS = (
 	before_event_dispatch  => [],
