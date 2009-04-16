@@ -58,9 +58,12 @@ BEGIN {
 	$orig_session_create  = \&POE::Session::create;
 	$orig_data_ev_enqueue = \&POE::Kernel::_data_ev_enqueue;
 
-	*{'POE::Kernel::_dispatch_event'} = \&ima_bad_monkey_dispatch_event;
-	*{'POE::Session::create'} = \&ima_bad_monkey_session_create;
-	*{'POE::Kernel::_data_ev_enqueue'} = \&ima_bad_monkey_data_ev_enqueue;
+	{
+		no warnings qw(redefine);
+		*{'POE::Kernel::_dispatch_event'} = \&ima_bad_monkey_dispatch_event;
+		*{'POE::Session::create'} = \&ima_bad_monkey_session_create;
+		*{'POE::Kernel::_data_ev_enqueue'} = \&ima_bad_monkey_data_ev_enqueue;
+	}
 }
 
 use warnings;
@@ -68,7 +71,7 @@ use strict;
 
 use Params::Validate qw(validate CODEREF);
 
-our $VERSION = '2.02';
+our $VERSION = '2.03';
 
 my %HOOKS = (
 	before_event_dispatch  => [],
